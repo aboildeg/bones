@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.26)
 
-project(abystek VERSION 0.1 DESCRIPTION "Game engine in C++" LANGUAGES CXX)
+project(abys VERSION 0.1 DESCRIPTION "Game in C++" LANGUAGES CXX)
+enable_language(C)
+
+set(CMAKE_GENERATOR "Unix Makefiles")
 
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
@@ -17,14 +20,14 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     endif()
 endif()
 
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/repo/CMakeLists.txt")
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/vendor/glfw/CMakeLists.txt")
     message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 endif()
 
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
-add_subdirectory(vendor/glfw)
+add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/glfw)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -35,12 +38,19 @@ else()
     endif()
 endif()
 
-add_library(glad STATIC vendor/glad/src/glad.c)
+add_library(glad STATIC ${CMAKE_SOURCE_DIR}/vendor/glad/src/glad.c)
 
-target_include_directories(glad PRIVATE vendor/glad/include)
+target_include_directories(glad PUBLIC ${CMAKE_SOURCE_DIR}/vendor/glad/include)
 
 add_executable(${PROJECT_NAME})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include
+                                            PRIVATE ${CMAKE_SOURCE_DIR}/vendor/glfw/include)
+
 
 add_subdirectory(src)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad ${GLFW_LIBRARIES} ${GLAD_LIBRARIES})
+
+
+
