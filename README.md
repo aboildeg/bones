@@ -1,2 +1,3 @@
-# abystek
-OpenGL C++ game engine
+# Bones
+OpenGL C++ game 
+
