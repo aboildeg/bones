@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-project(abys VERSION 0.1 DESCRIPTION "Game in C++" LANGUAGES CXX)
+project(abys VERSION 0.1 DESCRIPTION "Game engine in C++" LANGUAGES CXX)
 enable_language(C)
 
 set(CMAKE_GENERATOR "Unix Makefiles")

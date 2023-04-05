@@ -1,3 +1,3 @@
 # Bones
-OpenGL C++ game 
+OpenGL C++ game engine
 
